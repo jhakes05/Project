@@ -1,9 +1,12 @@
+// src/components/CertificateGenerator.js
+
 import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import img from '../assets/certificate-background.png';
 import signatureImg from '../assets/Signiture.png';
 import axios from 'axios';
 
+// Add the toDataUrl function here
 async function toDataUrl(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -91,24 +94,38 @@ function CertificateGenerator() {
       const signatureHorizontalPosition = 140 + (228 - 140) / 2 - signatureWidth / 2;
       doc.addImage(signatureImgDataUrl, 'PNG', signatureHorizontalPosition, 135, signatureWidth, signatureHeight);
 
+      const pdfContent = doc.output('datauristring');
+      console.log('PDF Content:', pdfContent);
+      setShowCertificate(pdfContent);
+
+      const customName = `${userData.full_name.replace(/\s+/g, '_')}_${courseData.courseId}_certificate`;
       const pdfData = doc.output('blob');
       const pdfBlob = new Blob([pdfData], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      localStorage.setItem(customName, pdfUrl);
 
+      // Convert Blob to base64
       const reader = new FileReader();
       reader.readAsDataURL(pdfBlob);
 
       reader.onloadend = async function () {
         const base64Data = reader.result.split(',')[1];
-        const response = await axios.post('http://localhost:8080/api/certs', { file: base64Data }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
 
-        console.log('Certificate uploaded to the server:', response.data);
+        // Upload the PDF data as JSON
+        const uploadResponse = await axios.post(
+          'http://localhost:8080/api/certs',
+          { file: base64Data, name: customName },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        console.log('Certificate uploaded to the server:', uploadResponse.data);
       };
     } catch (error) {
-      console.error('Error generating or uploading certificate:', error);
+      console.error('Error generating certificate:', error);
     }
   }
 
@@ -118,6 +135,7 @@ function CertificateGenerator() {
 
       {showCertificate && (
         <div>
+          {/* Use <embed> tag instead of <iframe> */}
           <embed src={showCertificate} type="application/pdf" width="100%" height="600px" />
         </div>
       )}
