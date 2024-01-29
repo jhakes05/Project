@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long UserID;
+    private Long userID;
     private String full_name;
     private String username;
     private String email;
@@ -17,12 +17,12 @@ public class Users {
     private String profile;
 
 
-    public Long getUserID() {
-        return this.UserID;
+    public Long getuserID() {
+        return this.userID;
     }
 
-    public void setUserID(Long UserID) {
-        this.UserID = UserID;
+    public void setuserID(Long userID) {
+        this.userID = userID;
     }
 
     public String getFull_name() {

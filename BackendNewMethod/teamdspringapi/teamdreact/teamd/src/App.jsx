@@ -1,16 +1,16 @@
 import './App.css'
 import Sandbox from './Components/sandbox';
-import CertificateGenerator from './Components/CertificateGenerator';
-import PdfViewer from './Components/PdfViewer';
+import CertificateGenerator from './Components/Generators';
+
 
 function App() {
 
 
   return (
     <>
- <Sandbox/>
+ {/* <Sandbox/> */}
  <CertificateGenerator/>
- <PdfViewer/>
+
     </>
   )
 }

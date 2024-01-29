@@ -1,146 +1,127 @@
-// src/components/CertificateGenerator.js
-
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
 import img from '../assets/certificate-background.png';
 import signatureImg from '../assets/Signiture.png';
-import axios from 'axios';
 
-// Add the toDataUrl function here
-async function toDataUrl(url) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.onload = function () {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
-      resolve(canvas.toDataURL('image/png'));
-    };
-    img.onerror = reject;
-    img.src = url;
-  });
-}
-
-function CertificateGenerator() {
-  const [CertificationData, setCertificationData] = useState([]);
-  const [courseData, setcourseData] = useState([]);
-  const [userData, setuserData] = useState([]);
-  const [instructorData, setinstructorData] = useState([]);
-  const [BadgeData, setBadgeData] = useState([]);
-  const [showCertificate, setShowCertificate] = useState(false);
+const CertificateGenerator = () => {
+  const [quiz, setQuiz] = useState([]);
 
   useEffect(() => {
-    const loadCertificationData = async () => {
+    const loadQuiz = async () => {
       try {
-        const certificationResult = await axios.get('http://localhost:8080/api/certifications/1');
-        setCertificationData(certificationResult.data);
-
-        const courseResult = await axios.get(`http://localhost:8080/api/courses/${certificationResult.data.courseId}`);
-        setcourseData(courseResult.data);
-
-        const usersResult = await axios.get(`http://localhost:8080/api/users/${certificationResult.data.userID}`);
-        setuserData(usersResult.data);
-
-        const instructorResult = await axios.get(`http://localhost:8080/api/instructors/${certificationResult.data.instructorID}`);
-        setinstructorData(instructorResult.data);
-
-        const BadgeResult = await axios.get(`http://localhost:8080/api/badges/${certificationResult.data.badgeID}`);
-        setBadgeData(BadgeResult.data);
+        const response = await fetch("http://localhost:8080/api/quizTkn/byUserId/1");
+        if (!response.ok) {
+          throw new Error("Failed to fetch quiz data");
+        }
+        const data = await response.json();
+        setQuiz(data);
       } catch (error) {
-        console.error('Error fetching certification data:', error);
+        console.error("Error fetching quiz data:", error);
       }
     };
-    loadCertificationData();
+    loadQuiz();
   }, []);
 
-  async function generateCertificate() {
-    try {
-      const doc = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: [297, 210],
-      });
-
-      doc.addImage(img, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
-      doc.setTextColor(162, 123, 66);
-      doc.setFont('helvetica');
-
-      doc.setFontSize(35);
-      doc.text(`${userData.full_name}`, 140, 108, { align: 'center' });
-
-      doc.setFontSize(20);
-      doc.text(`${courseData.title}`, 190, 119, { align: 'center' });
-      doc.setTextColor(0, 0, 0);
-      doc.text(`${instructorData.full_name}`, 157, 168, { align: 'left' });
-
-      const options = { day: 'numeric', month: 'long', year: 'numeric' };
-      const formattedDateIssued = new Date(CertificationData.dateIssued).toLocaleDateString(undefined, options);
-      doc.setFontSize(17);
-      doc.text(`${formattedDateIssued}`, 148, 128, { align: 'right' });
-
-      const originalDateIssued = new Date(CertificationData.dateIssued).toLocaleDateString();
-      doc.setFontSize(10);
-      doc.text(`${originalDateIssued}`, 87, 154, { align: 'right' });
-      doc.setFontSize(10);
-      doc.text(`${CertificationData.certificateSerialNo}`, 96, 158, { align: 'right' });
-      doc.text(`${courseData.courseId}`, 75, 163, { align: 'right' });
-
-      const signatureImgDataUrl = await toDataUrl(signatureImg);
-      const signatureWidth = 50;
-      const signatureHeight = 50;
-      const signatureHorizontalPosition = 140 + (228 - 140) / 2 - signatureWidth / 2;
-      doc.addImage(signatureImgDataUrl, 'PNG', signatureHorizontalPosition, 135, signatureWidth, signatureHeight);
-
-      const pdfContent = doc.output('datauristring');
-      console.log('PDF Content:', pdfContent);
-      setShowCertificate(pdfContent);
-
-      const customName = `${userData.full_name.replace(/\s+/g, '_')}_${courseData.courseId}_certificate`;
-      const pdfData = doc.output('blob');
-      const pdfBlob = new Blob([pdfData], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      localStorage.setItem(customName, pdfUrl);
-
-      // Convert Blob to base64
-      const reader = new FileReader();
-      reader.readAsDataURL(pdfBlob);
-
-      reader.onloadend = async function () {
-        const base64Data = reader.result.split(',')[1];
-
-        // Upload the PDF data as JSON
-        const uploadResponse = await axios.post(
-          'http://localhost:8080/api/certs',
-          { file: base64Data, name: customName },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        console.log('Certificate uploaded to the server:', uploadResponse.data);
-      };
-    } catch (error) {
-      console.error('Error generating certificate:', error);
+  // console.log(quiz[0].quiztknID)
+  const generateCertificate = async () => {
+    console.log(quiz)
+    if (!quiz) {
+      console.error('Quiz data is not available or incomplete');
+      return;
     }
+
+    const name = quiz[0].users.full_name;
+    const instructor = quiz[0].quiz.course.instructor.full_name;
+    const course = quiz[0].quiz.course.title;
+    const quiztknId = quiz[0].quiztknID;
+
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: [297, 210],
+    });
+
+    doc.addImage(img, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
+
+    doc.setFontSize(48);
+    doc.setTextColor(162, 123, 66);
+    doc.setFont('helvetica');
+    const recipientNameTextWidth = doc.getStringUnitWidth(name) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    const recipientPosition = 70 + (225 - 70) / 2 - recipientNameTextWidth / 2;
+    doc.text(name, recipientPosition, 103, { align: 'left' });
+
+    doc.setFontSize(20);
+    doc.setTextColor(162, 123, 66);
+    const courseTextWidth = doc.getStringUnitWidth(course) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    const coursePosition = 140 + (245 - 140) / 2 - courseTextWidth / 2;
+    doc.text(course, coursePosition, 117, { align: 'left' });
+
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    const instructorTextWidth = doc.getStringUnitWidth(instructor) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    const centerPosition = 170 + (228 - 170) / 2 - instructorTextWidth / 2;
+    doc.text(instructor, centerPosition, 167, { align: 'center' });
+
+    const signatureImgDataUrl = await toDataUrl(signatureImg);
+    const signatureWidth = 50;
+    const signatureHeight = 50;
+    const signatureHorizontalPosition = 140 + (228 - 140) / 2 - signatureWidth / 2;
+    doc.addImage(signatureImgDataUrl, 'PNG', signatureHorizontalPosition, 135, signatureWidth, signatureHeight);
+
+    const serialNumber = Math.floor(Math.random() * 1000000);
+    doc.setFontSize(11.3);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Batch_55-${serialNumber}`, 85, 158, { align: 'left' });
+
+    // Save the PDF file to send to the backend
+    const pdfFile = new File([doc.output('blob')], `${name}-${course}.pdf`, { type: 'application/pdf' });
+
+    // Create form data to send the file to the backend
+    const formDataToSend = new FormData();
+    formDataToSend.append('serial_no', `Batch_55-${serialNumber}`);
+    formDataToSend.append('file', pdfFile);
+    formDataToSend.append('date_issued', "2024-01-25");
+    formDataToSend.append('criteria', "test");
+    formDataToSend.append('quiztkn_ID', quiztknId);
+
+    // Send the PDF file to the backend
+    fetch('http://localhost:8080/api/certifications', {
+      method: 'POST',
+      body: formDataToSend,
+    })
+    .then(response => {
+      console.log('Certificate saved:', response);
+      // Handle success as needed
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Handle error as needed
+    });
+  };
+
+  function toDataUrl(url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
   }
 
   return (
     <div>
+      {/* Button to generate certificate */}
       <button onClick={generateCertificate}>Generate Certificate</button>
-
-      {showCertificate && (
-        <div>
-          {/* Use <embed> tag instead of <iframe> */}
-          <embed src={showCertificate} type="application/pdf" width="100%" height="600px" />
-        </div>
-      )}
     </div>
   );
-}
+};
 
 export default CertificateGenerator;

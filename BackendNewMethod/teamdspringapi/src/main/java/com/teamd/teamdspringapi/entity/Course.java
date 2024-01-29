@@ -1,31 +1,38 @@
 package com.teamd.teamdspringapi.entity;
 
+import java.sql.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-@Table(name = "course")
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long courseId;
+    private Long courseID;
     private String title;
     private String description;
+    private String criteria;
     private String file;
     private String image;
-    private String start_date;
-    private String end_date;
-    private Long instructor_id;
+    private Date start_date;
+    private Date end_date;
 
-    public Long getCourseId() {
-        return this.courseId;
+    @ManyToOne
+    @JoinColumn(name = "instructor_ID")
+    private Instructor instructor;
+
+
+    public Long getCourseID() {
+        return this.courseID;
     }
 
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
+    public void setCourseID(Long courseID) {
+        this.courseID = courseID;
     }
 
     public String getTitle() {
@@ -44,6 +51,14 @@ public class Course {
         this.description = description;
     }
 
+    public String getCriteria() {
+        return this.criteria;
+    }
+
+    public void setCriteria(String criteria) {
+        this.criteria = criteria;
+    }
+
     public String getFile() {
         return this.file;
     }
@@ -60,30 +75,29 @@ public class Course {
         this.image = image;
     }
 
-    public String getStart_date() {
+    public Date getStart_date() {
         return this.start_date;
     }
 
-    public void setStart_date(String start_date) {
+    public void setStart_date(Date start_date) {
         this.start_date = start_date;
     }
 
-    public String getEnd_date() {
+    public Date getEnd_date() {
         return this.end_date;
     }
 
-    public void setEnd_date(String end_date) {
+    public void setEnd_date(Date end_date) {
         this.end_date = end_date;
     }
 
-    public Long getInstructor_id() {
-        return this.instructor_id;
+    public Instructor getInstructor() {
+        return this.instructor;
     }
 
-    public void setInstructor_id(Long instructor_id) {
-        this.instructor_id = instructor_id;
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
     }
-
 
 
 }

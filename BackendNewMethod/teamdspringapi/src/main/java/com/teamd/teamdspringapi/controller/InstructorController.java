@@ -27,9 +27,9 @@ public class InstructorController {
         return instructorService.getAllInstructor();
     }
 
-    @GetMapping("/{InstructorID}")
-    public Instructor getInstructorById(@PathVariable Long InstructorID) {
-        return instructorService.getInstructorById(InstructorID);
+    @GetMapping("/{instructorID}")
+    public Instructor getInstructorById(@PathVariable Long instructorID) {
+        return instructorService.getInstructorById(instructorID);
     }
     
     @PostMapping
@@ -37,8 +37,8 @@ public class InstructorController {
         return instructorService.saveInstructor(instructor);
     }
 
-    @DeleteMapping("/{InstructorID}")
-    public void deleteInstructor(@PathVariable Long InstructorID) {
-        instructorService.deleteInstructor(InstructorID);
+    @DeleteMapping("/{instructorID}")
+    public void deleteInstructor(@PathVariable Long instructorID) {
+        instructorService.deleteInstructor(instructorID);
     }
 }

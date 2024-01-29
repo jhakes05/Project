@@ -10,7 +10,7 @@ public class Support {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private long SupportID;
+    private long supportID;
     private String full_name;
     private String username;
     private String email;
@@ -19,12 +19,12 @@ public class Support {
 
 
 
-    public long getSupportID() {
-        return this.SupportID;
+    public long getsupportID() {
+        return this.supportID;
     }
 
-    public void setSupportID(long SupportID) {
-        this.SupportID = SupportID;
+    public void setsupportID(long supportID) {
+        this.supportID = supportID;
     }
 
     public String getFull_name() {

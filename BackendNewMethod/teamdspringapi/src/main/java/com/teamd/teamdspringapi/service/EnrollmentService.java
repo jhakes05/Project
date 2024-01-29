@@ -9,22 +9,26 @@ import com.teamd.teamdspringapi.repository.EnrollmentRepository;
 
 @Service
 public class EnrollmentService {
-@Autowired
-private EnrollmentRepository enrollmentRepository;
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
 
-public List<Enrollment> getAllEnrollments(){
-    return enrollmentRepository.findAll();
-}
+    public List<Enrollment> getAEnrollments() {
+        return enrollmentRepository.findAll();
+    }
 
-public Enrollment getEnrollmentById(long EnrollmentID){
-    return enrollmentRepository.findById(EnrollmentID).orElse(null);
-}
+    public Enrollment getEnrollmentId(Long enrollmentID) {
+        return enrollmentRepository.findById(enrollmentID).orElse(null);
+    }
 
-public Enrollment saveEnrollment(Enrollment enrollment){
-    return enrollmentRepository.save(enrollment);
-}
+    public List<Enrollment> getEnrollmentsByUserId(Long user_ID) {
+        return enrollmentRepository.findByUserId(user_ID);
+    }
 
-public void deleteEnrollment(Long EnrollmentID){
-    enrollmentRepository.deleteById(EnrollmentID);
-}
+    public Enrollment savEnrollment(Enrollment enrollment) {
+        return enrollmentRepository.save(enrollment);
+    }
+
+    public void deleteEnrollment(Long enrollmentID) {
+        enrollmentRepository.deleteById(enrollmentID);
+    }
 }

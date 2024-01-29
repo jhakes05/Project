@@ -17,15 +17,15 @@ public class SupportService {
         return supportRepository.findAll();
     }
 
-    public Support getSupportById(Long SupportID) {
-        return supportRepository.findById(SupportID).orElse(null);
+    public Support getSupportById(Long supportID) {
+        return supportRepository.findById(supportID).orElse(null);
     }
 
     public Support saveSupport(Support support) {
         return supportRepository.save(support);
     }
 
-    public void deleteSupport(Long SupportID) {
-        supportRepository.deleteById(SupportID);
+    public void deleteSupport(Long supportID) {
+        supportRepository.deleteById(supportID);
     }
 }
