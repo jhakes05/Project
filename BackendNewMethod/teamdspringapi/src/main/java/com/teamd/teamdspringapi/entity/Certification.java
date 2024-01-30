@@ -1,106 +1,84 @@
 package com.teamd.teamdspringapi.entity;
 
 import java.sql.Date;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne; 
 
 @Entity
-public class Certification {
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long CertificateID;
-private Long CertificateSerialNo;
-private Long courseId;
-private Long UserID;
-private Long InstructorID;
-private Long SupportID;
-private Date DateIssued;
-private String CertificateFile;
-private Long BadgeID;
-private String Criteria;
+public class Certification{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long certificateID;
+    private String serial_no;
+    private Date date_issued;
+    private String certificate_file;
+    private String criteria;
+
+    @ManyToOne
+    @JoinColumn(name = "quiztkn_id")
+    private QuizTaken quizTaken;
+
+    // @ManyToOne
+    // @JoinColumn(name = "user_ID")
+    // private Users users;
+
+    // @ManyToOne
+    // @JoinColumn(name = "support_ID")
+    // private Support support;
 
 
     public Long getCertificateID() {
-        return this.CertificateID;
+        return this.certificateID;
     }
 
-    public void setCertificateID(Long CertificateID) {
-        this.CertificateID = CertificateID;
+    public void setCertificateID(Long certificateID) {
+        this.certificateID = certificateID;
     }
 
-    public Long getCertificateSerialNo() {
-        return this.CertificateSerialNo;
+    public String getSerial_no() {
+        return this.serial_no;
     }
 
-    public void setCertificateSerialNo(Long CertificateSerialNo) {
-        this.CertificateSerialNo = CertificateSerialNo;
+    public void setSerial_no(String serial_no) {
+        this.serial_no = serial_no;
     }
 
-    public Long getcourseId() {
-        return this.courseId;
+    public Date getDate_issued() {
+        return this.date_issued;
     }
 
-    public void setcourseId(Long courseId) {
-        this.courseId = courseId;
+    public void setDate_issued(Date date_issued) {
+        this.date_issued = date_issued;
     }
 
-    public Long getUserID() {
-        return this.UserID;
+    public String getCertificate_file() {
+        return this.certificate_file;
     }
 
-    public void setUserID(Long UserID) {
-        this.UserID = UserID;
-    }
-
-    public Long getInstructorID() {
-        return this.InstructorID;
-    }
-
-    public void setInstructorID(Long InstructorID) {
-        this.InstructorID = InstructorID;
-    }
-
-    public Long getSupportID() {
-        return this.SupportID;
-    }
-
-    public void setSupportID(Long SupportID) {
-        this.SupportID = SupportID;
-    }
-
-    public Date getDateIssued() {
-        return this.DateIssued;
-    }
-
-    public void setDateIssued(Date DateIssued) {
-        this.DateIssued = DateIssued;
-    }
-
-    public String getCertificateFile() {
-        return this.CertificateFile;
-    }
-
-    public void setCertificateFile(String CertificateFile) {
-        this.CertificateFile = CertificateFile;
-    }
-
-    public Long getBadgeID() {
-        return this.BadgeID;
-    }
-
-    public void setBadgeID(Long BadgeID) {
-        this.BadgeID = BadgeID;
+    public void setCertificate_file(String certificate_file) {
+        this.certificate_file = certificate_file;
     }
 
     public String getCriteria() {
-        return this.Criteria;
+        return this.criteria;
     }
 
-    public void setCriteria(String Criteria) {
-        this.Criteria = Criteria;
+    public void setCriteria(String criteria) {
+        this.criteria = criteria;
+    }
+    
+
+    public QuizTaken getQuizTaken() {
+        return this.quizTaken;
+    }
+
+    public void setQuizTaken(QuizTaken quizTaken) {
+        this.quizTaken = quizTaken;
     }
 
 }
+

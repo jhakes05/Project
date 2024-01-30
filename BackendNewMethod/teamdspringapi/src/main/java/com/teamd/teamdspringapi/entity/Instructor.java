@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long InstructorID;
+    private Long instructorID;
     private String full_name;
     private String username;
     private String email;
@@ -17,12 +17,12 @@ public class Instructor {
     private String profile;
 
 
-    public Long getInstructorID() {
-        return this.InstructorID;
+    public Long getinstructorID() {
+        return this.instructorID;
     }
 
-    public void setInstructorID(Long InstructorID) {
-        this.InstructorID = InstructorID;
+    public void setinstructorID(Long instructorID) {
+        this.instructorID = instructorID;
     }
 
     public String getFull_name() {

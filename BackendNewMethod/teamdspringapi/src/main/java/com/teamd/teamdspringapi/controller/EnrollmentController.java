@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.teamd.teamdspringapi.entity.Enrollment;
 import com.teamd.teamdspringapi.service.EnrollmentService;
 
-
 @RestController
 @RequestMapping("/api/enrollments")
 @CrossOrigin("http://localhost:5173")
@@ -24,22 +23,27 @@ public class EnrollmentController {
     private EnrollmentService enrollmentService;
 
     @GetMapping
-    public List<Enrollment> getAllEnrollments(){
-        return enrollmentService.getAllEnrollments();
+    public List<Enrollment> getAllEnrollments() {
+        return enrollmentService.getAEnrollments();
     }
 
-      @GetMapping("/{EnrollmentID}")
-    public Enrollment getEnrollmentById(@PathVariable Long EnrollmentID) {
-        return enrollmentService.getEnrollmentById(EnrollmentID);
+    @GetMapping("/{enrollmentID}")
+    public Enrollment getEnrollmentById(@PathVariable Long enrollmentID) {
+        return enrollmentService.getEnrollmentId(enrollmentID);
     }
 
-     @PostMapping
+    @GetMapping("/byUser/{user_ID}")
+    public List<Enrollment> getEnrollmentsByUserId(@PathVariable Long user_ID) {
+        return enrollmentService.getEnrollmentsByUserId(user_ID);
+    }
+
+    @PostMapping
     public Enrollment saveEnrollment(@RequestBody Enrollment enrollment) {
-        return enrollmentService.saveEnrollment(enrollment);
+        return enrollmentService.savEnrollment(enrollment);
     }
 
-    @DeleteMapping("/{EnrollmentID}")
-    public void deleteEnrollment(@PathVariable Long EnrollmentID) {
-        enrollmentService.deleteEnrollment(EnrollmentID);
+    @DeleteMapping("/{enrollmentID}")
+    public void deleteEnrollment(@PathVariable Long enrollmentID) {
+        enrollmentService.deleteEnrollment(enrollmentID);
     }
 }

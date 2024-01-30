@@ -22,23 +22,28 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    @GetMapping  
-    public List<Course> getAllCourse() {
-        return courseService.getAllCourse();
+    @GetMapping
+    public List<Course> getAllCourses() {
+        return courseService.getAllCourses();
     }
 
-    @GetMapping("/{courseId}")
-    public Course getCourseById(@PathVariable Long courseId) {
-        return courseService.getCouseById(courseId);
+    @GetMapping("/{courseID}")
+    public Course getCourseById(@PathVariable Long courseID) {
+        return courseService.getCourseId(courseID);
+    }
+
+    @GetMapping("/byInstructor/{instructor_ID}")
+    public List<Course> getCourseByInstructorId(@PathVariable Long instructor_ID) {
+        return courseService.getCourseByInstructorId(instructor_ID);
     }
 
     @PostMapping
     public Course saveCourse(@RequestBody Course course) {
-        return courseService.saveCourse(course);
+        return courseService.savCourse(course);
     }
 
-    @DeleteMapping("/{courseId}")
-    public void deleteCourse(@PathVariable Long courseId) {
-        courseService.deleteCourse(courseId);
+    @DeleteMapping("/{courseID}")
+    public void deleteCourse(@PathVariable Long courseID) {
+        courseService.deleteCourse(courseID);
     }
 }

@@ -17,15 +17,15 @@ public class InstructorService {
         return instructorRepository.findAll();
     }
 
-    public Instructor getInstructorById(Long InstructorID) {
-        return instructorRepository.findById(InstructorID).orElse(null);
+    public Instructor getInstructorById(Long instructorID) {
+        return instructorRepository.findById(instructorID).orElse(null);
     }
 
     public Instructor saveInstructor(Instructor instructor) {
         return instructorRepository.save(instructor);
     }
 
-    public void deleteInstructor(Long InstructorID) {
-        instructorRepository.deleteById(InstructorID);
+    public void deleteInstructor(Long instructorID) {
+        instructorRepository.deleteById(instructorID);
     }
 }

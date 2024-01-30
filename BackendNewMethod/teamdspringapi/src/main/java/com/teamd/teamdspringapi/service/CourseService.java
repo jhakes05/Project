@@ -13,19 +13,23 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
-    public List<Course> getAllCourse() {
+    public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
 
-    public Course getCouseById(Long courseId) {
-        return courseRepository.findById(courseId).orElse(null);
+    public Course getCourseId(Long courseID) {
+        return courseRepository.findById(courseID).orElse(null);
     }
 
-    public Course saveCourse(Course course) {
+    public List<Course> getCourseByInstructorId(Long instructor_ID){
+        return courseRepository.findByInstructorId(instructor_ID);
+    }
+
+    public Course savCourse(Course course) {
         return courseRepository.save(course);
     }
 
-    public void deleteCourse(Long courseId) {
-        courseRepository.deleteById(courseId);
+    public void deleteCourse(Long courseID) {
+        courseRepository.deleteById(courseID);
     }
 }

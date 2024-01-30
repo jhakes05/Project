@@ -1,14 +1,17 @@
 import './App.css'
-import Sandbox from './Components/sandbox';
 import CertificateGenerator from './Components/CertificateGenerator';
+import Sandbox from './Components/sandbox';
+
+
 
 function App() {
 
 
   return (
     <>
- <Sandbox/>
+ {/* <Sandbox/> */}
  <CertificateGenerator/>
+
     </>
   )
 }

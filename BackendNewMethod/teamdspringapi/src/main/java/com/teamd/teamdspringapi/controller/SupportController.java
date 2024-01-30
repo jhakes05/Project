@@ -27,9 +27,9 @@ public List<Support> getAllSupport(){
     return supportService.getAllSupport();
 }
 
-@GetMapping("/{SupportID}")
-public Support getSupportById(@PathVariable Long SupportID){
-    return supportService.getSupportById(SupportID);
+@GetMapping("/{supportID}")
+public Support getSupportById(@PathVariable Long supportID){
+    return supportService.getSupportById(supportID);
 }
 
 @PostMapping
@@ -38,7 +38,7 @@ public Support saveSupport(@RequestBody Support support){
 }
 
   @DeleteMapping
-    public void deleteSupport(@PathVariable Long SupportID) {
-        supportService.deleteSupport(SupportID);
+    public void deleteSupport(@PathVariable Long supportID) {
+        supportService.deleteSupport(supportID);
     }
 }

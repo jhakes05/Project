@@ -10,22 +10,26 @@ import com.teamd.teamdspringapi.repository.CertificationRepository;
 
 @Service
 public class CertificationService {
-@Autowired
-private CertificationRepository certificationRepository;
+    @Autowired
+    private CertificationRepository certificationRepository;
 
-public List<Certification> getAllCertifications(){
-    return certificationRepository.findAll();
-}
+    public List<Certification> getAllCertification() {
+        return certificationRepository.findAll();
+    }
 
-public Certification getCertificationById(Long CertificateID){
-    return certificationRepository.findById(CertificateID).orElse(null);
-}
+    public Certification getCertificationId(Long certificateID) {
+        return certificationRepository.findById(certificateID).orElse(null);
+    }
 
-public Certification saveCertification(Certification certification){
-    return certificationRepository.save(certification);
-}
+    public List<Certification> getCertificationByUserId(Long user_ID) {
+        return certificationRepository.findByUserId(user_ID);
+    }
 
-public void deleteCertification(Long CertificateID){
-    certificationRepository.deleteById(CertificateID);
-}
+    public Certification savCertification(Certification certification) {
+        return certificationRepository.save(certification);
+    }
+
+    public void deleteCertification(Long certificateID) {
+        certificationRepository.deleteById(certificateID);
+    }
 }
