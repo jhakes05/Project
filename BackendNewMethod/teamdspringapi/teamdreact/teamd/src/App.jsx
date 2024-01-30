@@ -1,6 +1,7 @@
 import './App.css'
+import CertificateGenerator from './Components/CertificateGenerator';
 import Sandbox from './Components/sandbox';
-import CertificateGenerator from './Components/Generators';
+
 
 
 function App() {

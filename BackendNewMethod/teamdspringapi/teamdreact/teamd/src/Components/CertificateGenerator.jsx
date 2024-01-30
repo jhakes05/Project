@@ -22,19 +22,25 @@ const CertificateGenerator = () => {
     loadQuiz();
   }, []);
 
-  // console.log(quiz[0].quiztknID)
   const generateCertificate = async () => {
-    console.log(quiz)
-    if (!quiz) {
+    if (!quiz || !quiz[0]) {
       console.error('Quiz data is not available or incomplete');
       return;
     }
 
+    const targetScore = quiz[0].quiz_score;
     const name = quiz[0].users.full_name;
     const instructor = quiz[0].quiz.course.instructor.full_name;
     const course = quiz[0].quiz.course.title;
     const quiztknId = quiz[0].quiztknID;
 
+    // Check if the target score is greater than or equal to 80 1/30/24
+    const isPass = targetScore >= 80;
+    const resultText = isPass ? 'Pass' : 'Failed';
+    if (!isPass) {
+      console.log('Quiz result is a failure. Certificate will not be generated.');
+      return;
+    }
     const doc = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
@@ -72,6 +78,14 @@ const CertificateGenerator = () => {
     doc.setFontSize(11.3);
     doc.setTextColor(0, 0, 0);
     doc.text(`Batch_55-${serialNumber}`, 85, 158, { align: 'left' });
+
+    // Add the pass/fail result to the generated PDF
+    doc.setFontSize(18);
+    doc.setTextColor(0, 0, 0);
+    doc.text(resultText, centerPosition, 187, { align: 'center' });
+
+    // Log the result to the console
+    console.log(`Result: ${resultText}`);
 
     // Save the PDF file to send to the backend
     const pdfFile = new File([doc.output('blob')], `${name}-${course}.pdf`, { type: 'application/pdf' });
