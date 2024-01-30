@@ -33,6 +33,7 @@ const CertificateGenerator = () => {
     const instructor = quiz[0].quiz.course.instructor.full_name;
     const course = quiz[0].quiz.course.title;
     const quiztknId = quiz[0].quiztknID;
+    const courseid = quiz[0].quiz.course.courseID;
 
     // Check if the target score is greater than or equal to 80 1/30/24
     const isPass = targetScore >= 80;
@@ -67,7 +68,22 @@ const CertificateGenerator = () => {
     const instructorTextWidth = doc.getStringUnitWidth(instructor) * doc.internal.getFontSize() / doc.internal.scaleFactor;
     const centerPosition = 170 + (228 - 170) / 2 - instructorTextWidth / 2;
     doc.text(instructor, centerPosition, 167, { align: 'center' });
-
+    //current date today 1/30/24
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+    const cDate = new Date();
+    
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const formattedDateIssued = cDate.toLocaleDateString(undefined, options);
+    
+    doc.setFontSize(17);
+    doc.text(`${formattedDateIssued}`, 148, 128, { align: 'right' });
+   
+doc.setFontSize(10);
+doc.text(formattedDate, 87, 154, { align: 'right' });
+//courseid
+doc.text(`${courseid}`, 75, 163, { align: 'right' });
+    
     const signatureImgDataUrl = await toDataUrl(signatureImg);
     const signatureWidth = 50;
     const signatureHeight = 50;
@@ -79,10 +95,6 @@ const CertificateGenerator = () => {
     doc.setTextColor(0, 0, 0);
     doc.text(`Batch_55-${serialNumber}`, 85, 158, { align: 'left' });
 
-    // Add the pass/fail result to the generated PDF
-    doc.setFontSize(18);
-    doc.setTextColor(0, 0, 0);
-    doc.text(resultText, centerPosition, 187, { align: 'center' });
 
     // Log the result to the console
     console.log(`Result: ${resultText}`);
@@ -94,8 +106,8 @@ const CertificateGenerator = () => {
     const formDataToSend = new FormData();
     formDataToSend.append('serial_no', `Batch_55-${serialNumber}`);
     formDataToSend.append('file', pdfFile);
-    formDataToSend.append('date_issued', "2024-01-25");
-    formDataToSend.append('criteria', "test");
+    formDataToSend.append('date_issued', formattedDate);
+    formDataToSend.append('criteria', isPass);
     formDataToSend.append('quiztkn_ID', quiztknId);
 
     // Send the PDF file to the backend
